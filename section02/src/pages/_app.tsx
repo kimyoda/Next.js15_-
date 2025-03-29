@@ -1,12 +1,19 @@
 import GlobalLayout from "@/components/global-layout";
 import "@/styles/globals.css";
+import { NextPage } from "next";
 import type { AppProps } from "next/app";
+import { ReactNode } from "react";
 
-export default function App({ Component, pageProps }: AppProps) {
-  // 글로벌 레이아웃 적용하는 방법
-  return (
-    <GlobalLayout>
-      <Component {...pageProps} />
-    </GlobalLayout>
-  );
+// 새로운 타입을 만들기
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactNode) => ReactNode;
+};
+
+export default function App({
+  Component,
+  pageProps,
+}: AppProps & { Component: NextPageWithLayout }) {
+  const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
+
+  return <GlobalLayout>{getLayout(<Component {...pageProps} />)}</GlobalLayout>;
 }
