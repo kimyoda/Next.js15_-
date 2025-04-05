@@ -6,7 +6,7 @@
  * - 서버 사이드 렌더링을 통한 SEO 최적화
  * - 도서 상세 정보 표시
  */
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import style from "./[id].module.css";
 import fecthOneBook from "@/lib/fetch-one-books";
 // ...을 붙이면 catch all segment 모든 구간에 대응하는 페이지는 ...을 붙인다.
@@ -17,9 +17,19 @@ import fecthOneBook from "@/lib/fetch-one-books";
  * @param context - Next.js의 서버 사이드 컨텍스트
  * @returns 페이지에 필요한 props 객체
  */
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+
+export const getStaticPaths = () => {
+  return {
+    paths: [
+      { params: { id: "1" } },
+      { params: { id: "2" } },
+      { params: { id: "3" } },
+    ],
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   // URL 파라미터에서 도서 ID 추출
   const id = context.params!.id;
   // 해당 ID의 도서 정보 조회
@@ -35,9 +45,10 @@ export const getServerSideProps = async (
  * 도서 상세 정보를 표시하는 페이지 컴포넌트
  * @param book - 서버에서 조회한 도서 정보
  */
+
 export default function Page({
   book,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   // 도서 정보가 없는 경우 에러 메시지 표시
   if (!book) {
     return "문제가 발생했습니다 다시 시도하세요";
