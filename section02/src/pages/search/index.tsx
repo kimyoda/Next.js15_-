@@ -7,6 +7,11 @@
  * - 검색 결과 목록 표시
  * - 검색 가능한 레이아웃 적용
  * - 실시간 검색 결과 업데이트
+ *
+ * 변경사항:
+ * - SSR에서 클라이언트 사이드 데이터 페칭으로 변경
+ * - useRouter와 useEffect를 통한 실시간 검색 처리
+ * - 상태 관리를 통한 검색 결과 업데이트
  */
 import SearchableLayout from "@/components/searchable-layout";
 import { ReactNode, useEffect, useState } from "react";
@@ -38,6 +43,7 @@ import { BookData } from "@/types";
  * 검색 결과를 표시하는 페이지 컴포넌트
  * - 클라이언트 사이드에서 검색어를 감지하고 결과를 가져옴
  * - URL 쿼리 파라미터 변경에 따라 실시간으로 검색 결과 업데이트
+ * - 변경사항: 서버 사이드 렌더링에서 클라이언트 사이드 데이터 페칭으로 전환
  */
 export default function Page() {
   // 검색 결과를 저장하는 상태
@@ -51,6 +57,7 @@ export default function Page() {
    * 검색어를 사용하여 도서 목록을 가져오는 함수
    * - 클라이언트 사이드에서 API 호출
    * - 검색 결과를 상태에 저장
+   * - 변경사항: 서버 사이드에서 클라이언트 사이드로 이동
    */
   const fetchSearchResult = async () => {
     const data = await fetchBooks(q as string);
@@ -98,4 +105,9 @@ Page.getLayout = (page: ReactNode) => {
  * - URL 기반 검색 상태 관리
  * - 검색 UI 제공
  * - 동적 검색 결과 표시
+ *
+ * 변경사항 요약:
+ * - 서버 사이드 렌더링에서 클라이언트 사이드 데이터 페칭으로 전환
+ * - useRouter와 useEffect를 통한 실시간 검색 처리
+ * - 상태 관리를 통한 검색 결과 업데이트
  */
