@@ -44,8 +44,7 @@ export default function Page({
   }
 
   // 도서 정보 구조 분해 할당
-  const { id, title, subTitle, author, coverImgUrl, description, publisher } =
-    book;
+  const { title, subTitle, author, coverImgUrl, description, publisher } = book;
   return (
     <div className={style.container}>
       {/* 도서 표지 이미지 섹션 */}
