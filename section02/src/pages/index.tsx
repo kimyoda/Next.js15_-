@@ -9,21 +9,26 @@
  * - 추천 도서 목록 표시
  * - 검색 가능한 레이아웃 적용
  * - CSS 모듈을 통한 스타일 관리
+ * - SSG(Static Site Generation)를 통한 성능 최적화
  */
 import SearchableLayout from "@/components/searchable-layout";
 import style from "./index.module.css";
 import { ReactNode } from "react";
 // @는 tsconfig.json 안에 경로로 있다.
 import BookItem from "@/components/book-item";
-import { InferGetServerSidePropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
 
 /**
- * 서버 사이드에서 실행되는 데이터 페칭 함수
+ * SSG(Static Site Generation)를 위한 데이터 페칭 함수
+ * - 빌드 시점에 데이터를 미리 가져와 정적 페이지 생성
+ * - SSR 대비 더 나은 성능과 SEO 최적화 제공
  * @returns 전체 도서 목록과 추천 도서 목록을 포함한 props 객체
  */
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
+  console.log("인덱스 페이지");
+
   // 전체 도서 목록과 추천 도서 목록을 병렬로 조회
   const [allBooks, recoBooks] = await Promise.all([
     fetchBooks(),
@@ -40,13 +45,13 @@ export const getServerSideProps = async () => {
 
 /**
  * 메인 페이지 컴포넌트
- * @param allBooks - 전체 도서 목록
- * @param recoBooks - 추천 도서 목록
+ * @param allBooks - 빌드 시점에 가져온 전체 도서 목록
+ * @param recoBooks - 빌드 시점에 가져온 추천 도서 목록
  */
 export default function Home({
   allBooks,
   recoBooks,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className={style.container}>
       {/* 추천 도서 섹션 */}
@@ -79,13 +84,14 @@ Home.getLayout = (page: ReactNode) => {
 
 /**
  * 코드 실행 흐름:
- * 1. 서버 사이드에서 도서 데이터 병렬 조회
- * 2. 조회된 데이터를 props로 페이지 컴포넌트에 전달
- * 3. 클라이언트에서 도서 목록 렌더링
+ * 1. 빌드 시점에 도서 데이터 병렬 조회 (SSG)
+ * 2. 조회된 데이터를 정적 페이지로 생성
+ * 3. 클라이언트 요청 시 미리 생성된 페이지 제공
  * 4. SearchableLayout을 통해 검색 기능 제공
  *
  * 주요 기능:
- * - 서버 사이드 데이터 페칭
+ * - SSG를 통한 성능 최적화
+ * - 정적 페이지 생성으로 빠른 로딩
  * - 병렬 데이터 로딩
  * - 도서 목록 표시
  * - 추천 도서 표시
