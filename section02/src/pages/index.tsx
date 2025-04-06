@@ -40,9 +40,6 @@ export const getStaticProps = async () => {
       allBooks,
       recoBooks,
     },
-    // isr 중분 정적 재생성, 정적 페이지를 일정 시간을 주기로 다시 생성하는 기술이다.
-    // 유통기한을 초 단위로 적을 수 있다.(재검증하다)
-    revalidate: 3,
   };
 };
 
