@@ -19,6 +19,7 @@ import BookItem from "@/components/book-item";
 import { InferGetStaticPropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
+import Head from "next/head";
 
 /**
  * SSG(Static Site Generation)를 위한 데이터 페칭 함수
@@ -27,8 +28,6 @@ import fetchRandomBooks from "@/lib/fetch-random-books";
  * @returns 전체 도서 목록과 추천 도서 목록을 포함한 props 객체
  */
 export const getStaticProps = async () => {
-  console.log("인덱스 페이지");
-
   // 전체 도서 목록과 추천 도서 목록을 병렬로 조회
   const [allBooks, recoBooks] = await Promise.all([
     fetchBooks(),
@@ -53,23 +52,35 @@ export default function Home({
   recoBooks,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div className={style.container}>
-      {/* 추천 도서 섹션 */}
-      <section>
-        <h3>지금 추천하는 도서</h3>
-        {/* books의 key값을 받고 전개연산자로 props전달 */}
-        {recoBooks.map((book) => (
-          <BookItem key={book.id} {...book} />
-        ))}
-      </section>
-      {/* 전체 도서 목록 섹션 */}
-      <section>
-        <h3>등록된 모든 도서</h3>
-        {allBooks.map((book) => (
-          <BookItem key={book.id} {...book} />
-        ))}
-      </section>
-    </div>
+    <>
+      {/* Head라는 추가적인 컴포넌트를 이용해 타이틀이나 메타태그를 별도로 설정이 가능하다. */}
+      <Head>
+        <title>한입북스</title>
+        <meta property="og:image" content="/thumbnail.png" />
+        <meta property="og:title" content="한입북스" />
+        <meta
+          property="og:description"
+          content="한입 북스에 등록된 도서들을 만나보세요"
+        />
+      </Head>
+      <div className={style.container}>
+        {/* 추천 도서 섹션 */}
+        <section>
+          <h3>지금 추천하는 도서</h3>
+          {/* books의 key값을 받고 전개연산자로 props전달 */}
+          {recoBooks.map((book) => (
+            <BookItem key={book.id} {...book} />
+          ))}
+        </section>
+        {/* 전체 도서 목록 섹션 */}
+        <section>
+          <h3>등록된 모든 도서</h3>
+          {allBooks.map((book) => (
+            <BookItem key={book.id} {...book} />
+          ))}
+        </section>
+      </div>
+    </>
   );
 }
 

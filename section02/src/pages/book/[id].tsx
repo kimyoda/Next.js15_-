@@ -18,6 +18,7 @@ import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import style from "./[id].module.css";
 import fecthOneBook from "@/lib/fetch-one-books";
 import { useRouter } from "next/router";
+import Head from "next/head";
 // ...을 붙이면 catch all segment 모든 구간에 대응하는 페이지는 ...을 붙인다.
 // 범용적으로 하고싶다면 []로 한번 더 감싼다. -> optional catch allsegment라고 한다.
 
@@ -92,7 +93,20 @@ export default function Page({
   const router = useRouter();
   // 로딩중이면 아래, 아니라면 문제가 발생했습니다 문구
   if (router.isFallback) {
-    return "로딩중입니다";
+    return (
+      <>
+        <Head>
+          <title>한입북스</title>
+          <meta property="og:image" content="/thumbnail.png" />
+          <meta property="og:title" content="한입북스" />
+          <meta
+            property="og:description"
+            content="한입 북스에 등록된 도서들을 만나보세요"
+          />
+          <div>로딩중입니다</div>
+        </Head>
+      </>
+    );
   }
 
   // 도서 정보가 없는 경우 에러 메시지 표시
@@ -103,22 +117,30 @@ export default function Page({
   // 도서 정보 구조 분해 할당
   const { title, subTitle, author, coverImgUrl, description, publisher } = book;
   return (
-    <div className={style.container}>
-      {/* 도서 표지 이미지 섹션 */}
-      <div
-        className={style.cover_img_container}
-        style={{ backgroundImage: `url('${coverImgUrl}')` }}
-      >
-        <img src={coverImgUrl} />
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta property="og:image" content={coverImgUrl} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+      </Head>
+      <div className={style.container}>
+        {/* 도서 표지 이미지 섹션 */}
+        <div
+          className={style.cover_img_container}
+          style={{ backgroundImage: `url('${coverImgUrl}')` }}
+        >
+          <img src={coverImgUrl} />
+        </div>
+        {/* 도서 정보 섹션 */}
+        <div className={style.title}>{title}</div>
+        <div className={style.subTitle}>{subTitle}</div>
+        <div className={style.author}>
+          {author} | {publisher}
+        </div>
+        <div className={style.description}>{description}</div>
       </div>
-      {/* 도서 정보 섹션 */}
-      <div className={style.title}>{title}</div>
-      <div className={style.subTitle}>{subTitle}</div>
-      <div className={style.author}>
-        {author} | {publisher}
-      </div>
-      <div className={style.description}>{description}</div>
-    </div>
+    </>
   );
 }
 
