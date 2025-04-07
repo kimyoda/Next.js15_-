@@ -12,7 +12,7 @@ import { BookData } from "@/types";
  */
 export default async function fetchRandomBooks(): Promise<BookData[]> {
   // 랜덤 도서 목록을 조회하기 위한 API 엔드포인트 URL 설정
-  const url = `http://localhost:12345/book/random`;
+  const url = `https://onebite-books-server-main-five-lyart.vercel.app/book/random`;
 
   try {
     // fetch API를 사용하여 서버에 GET 요청
