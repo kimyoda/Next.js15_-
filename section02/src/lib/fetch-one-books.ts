@@ -15,7 +15,7 @@ export default async function fecthOneBook(
   id: number
 ): Promise<BookData | null> {
   // 특정 도서를 조회하기 위한 API 엔드포인트 URL 설정
-  const url = `http://localhost:12345/book/${id}`;
+  const url = `https://onebite-books-server-main-five-lyart.vercel.app/book/${id}`;
 
   try {
     // fetch API를 사용하여 서버에 GET 요청

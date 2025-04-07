@@ -7,17 +7,20 @@
  * - 도서 상세 정보 표시
  * - 빌드 시점에 정적 페이지 생성
  * - 폴백(fallback) 상태 처리
+ * - SEO 최적화를 위한 메타데이터 관리
  *
  * 변경사항:
  * - SSR에서 SSG로 변경하여 성능 최적화
  * - getStaticPaths 추가로 모든 가능한 경로 미리 생성
  * - 빌드 시점에 데이터 페칭 및 페이지 생성
  * - 폴백 상태 처리 로직 추가
+ * - Head 컴포넌트를 통한 SEO 최적화 추가
  */
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import style from "./[id].module.css";
 import fecthOneBook from "@/lib/fetch-one-books";
 import { useRouter } from "next/router";
+import Head from "next/head";
 // ...을 붙이면 catch all segment 모든 구간에 대응하는 페이지는 ...을 붙인다.
 // 범용적으로 하고싶다면 []로 한번 더 감싼다. -> optional catch allsegment라고 한다.
 
@@ -83,6 +86,10 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
  * - router.isFallback: 페이지가 아직 서버로부터 데이터를 받지 못한 상태
  * - 이 상태에서는 로딩 UI를 표시하여 사용자 경험 개선
  * - 데이터가 준비되면 자동으로 페이지가 업데이트됨
+ *
+ * SEO 최적화:
+ * - Head 컴포넌트를 통해 페이지별 메타데이터 관리
+ * - 폴백 상태와 정상 상태에서 각각 다른 메타데이터 제공
  */
 export default function Page({
   book,
@@ -92,7 +99,20 @@ export default function Page({
   const router = useRouter();
   // 로딩중이면 아래, 아니라면 문제가 발생했습니다 문구
   if (router.isFallback) {
-    return "로딩중입니다";
+    return (
+      <>
+        <Head>
+          <title>한입북스</title>
+          <meta property="og:image" content="/thumbnail.png" />
+          <meta property="og:title" content="한입북스" />
+          <meta
+            property="og:description"
+            content="한입 북스에 등록된 도서들을 만나보세요"
+          />
+          <div>로딩중입니다</div>
+        </Head>
+      </>
+    );
   }
 
   // 도서 정보가 없는 경우 에러 메시지 표시
@@ -103,22 +123,30 @@ export default function Page({
   // 도서 정보 구조 분해 할당
   const { title, subTitle, author, coverImgUrl, description, publisher } = book;
   return (
-    <div className={style.container}>
-      {/* 도서 표지 이미지 섹션 */}
-      <div
-        className={style.cover_img_container}
-        style={{ backgroundImage: `url('${coverImgUrl}')` }}
-      >
-        <img src={coverImgUrl} />
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta property="og:image" content={coverImgUrl} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+      </Head>
+      <div className={style.container}>
+        {/* 도서 표지 이미지 섹션 */}
+        <div
+          className={style.cover_img_container}
+          style={{ backgroundImage: `url('${coverImgUrl}')` }}
+        >
+          <img src={coverImgUrl} />
+        </div>
+        {/* 도서 정보 섹션 */}
+        <div className={style.title}>{title}</div>
+        <div className={style.subTitle}>{subTitle}</div>
+        <div className={style.author}>
+          {author} | {publisher}
+        </div>
+        <div className={style.description}>{description}</div>
       </div>
-      {/* 도서 정보 섹션 */}
-      <div className={style.title}>{title}</div>
-      <div className={style.subTitle}>{subTitle}</div>
-      <div className={style.author}>
-        {author} | {publisher}
-      </div>
-      <div className={style.description}>{description}</div>
-    </div>
+    </>
   );
 }
 
@@ -130,6 +158,7 @@ export default function Page({
  * 4. 클라이언트 요청 시:
  *    - 미리 생성된 페이지가 있으면 즉시 제공
  *    - 없는 경우 폴백 상태의 페이지를 보여주고 백그라운드에서 생성
+ * 5. 페이지 렌더링 시 SEO 메타데이터 동적 설정
  *
  * 주요 기능:
  * - SSG를 통한 성능 최적화
@@ -138,10 +167,12 @@ export default function Page({
  * - 도서 상세 정보 표시
  * - 에러 상황 처리
  * - 폴백 상태 처리
+ * - SEO 최적화
  *
  * 변경사항 요약:
  * - SSR에서 SSG로 전환하여 성능 개선
  * - 모든 도서 ID에 대한 정적 페이지 미리 생성
  * - 빌드 시점에 데이터 페칭 및 페이지 생성
  * - 폴백 상태 처리 로직 추가로 사용자 경험 개선
+ * - Head 컴포넌트를 통한 SEO 최적화 추가
  */
