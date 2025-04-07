@@ -13,7 +13,7 @@ import { BookData } from "@/types";
  */
 export default async function fetchBooks(q?: string): Promise<BookData[]> {
   // 기본 API 엔드포인트 URL 설정
-  let url = `http://localhost:12345/book`;
+  let url = `https://onebite-books-server-main-five-lyart.vercel.app/book`;
 
   // 검색어가 있는 경우 검색 쿼리 파라미터 추가
   if (q) {
