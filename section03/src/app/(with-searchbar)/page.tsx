@@ -4,5 +4,7 @@
 import styles from "./page.module.css";
 
 export default function Home() {
+  // 서버 컴포넌트는 브라우저가 아닌 서버에서만 실행된다.
+
   return <div className={styles.page}>인덱스 페이지</div>;
 }
