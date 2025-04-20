@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 // Next.js의 라우터 그룹 기능
 // 폴더명을 괄호로 감싸면 (예: (with-searchbar)) URL 경로에 영향을 주지 않으면서
@@ -35,6 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <header>
+          <Link href={"/"}>index</Link>
+          &nbsp;
+          <Link href={"/search"}>search</Link>
+          &nbsp;
+          <Link href={"/book/1"}>book/1</Link>
+        </header>
         {children}
       </body>
     </html>
