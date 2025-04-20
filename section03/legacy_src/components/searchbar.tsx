@@ -12,7 +12,7 @@ export default function Searchbar() {
   };
 
   const onSubmit = () => {
-    if (!search.trim()) return; // ✅ 빈 문자열 검색 방지
+    // if (!search.trim()) return; // ✅ 빈 문자열 검색 방지
     router.push(`/search?q=${search}`);
   };
 
