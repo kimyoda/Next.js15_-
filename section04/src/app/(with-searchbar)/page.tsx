@@ -6,7 +6,8 @@ import { BookData } from "@/types";
 async function AllBooks() {
   // API 서버에서 모든 도서 데이터를 가져옴
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
+    { cache: "no-store" }
   );
   if (!response.ok) {
     return <div>오류가 발생했습니다 ...</div>;
@@ -26,7 +27,9 @@ async function AllBooks() {
 async function RecoBooks() {
   // API 서버에서 랜덤 추천 도서 데이터를 가져옴
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
+    // { cache: "force-cache" }
+    { next: { revalidate: 3 } }
   );
   if (!response.ok) {
     return <div>오류가 발생했습니다!</div>;
