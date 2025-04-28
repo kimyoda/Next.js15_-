@@ -4,6 +4,7 @@ import style from "./layout.module.css";
 import { BookData } from "@/types";
 
 async function Footer() {
+  // 기본 캐싱: 레이아웃에서도 정적 생성 캐시를 사용합니다.
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`
   );

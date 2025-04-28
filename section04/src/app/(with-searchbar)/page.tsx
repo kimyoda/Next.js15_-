@@ -5,6 +5,7 @@ import { BookData } from "@/types";
 // 모든 도서를 가져오는 컴포넌트
 async function AllBooks() {
   // API 서버에서 모든 도서 데이터를 가져옴
+  // 캐싱 비활성화: { cache: "no-store" } 옵션으로 매 요청 시 최신 데이터를 가져옵니다.
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
     { cache: "no-store" }
@@ -26,6 +27,7 @@ async function AllBooks() {
 // 추천 도서를 가져오는 컴포넌트
 async function RecoBooks() {
   // API 서버에서 랜덤 추천 도서 데이터를 가져옴
+  // ISR 설정: next.revalidate를 3초로 지정해, 최초 빌드 후 3초마다 재검증합니다.
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
     // { cache: "force-cache" }
