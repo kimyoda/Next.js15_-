@@ -11,6 +11,7 @@ export default async function Page({
   const { q } = await searchParams;
 
   // API 서버에 검색 요청을 보내고 결과를 가져옴
+  // 기본 캐싱: 옵션 미지정 시 정적 생성 캐시 사용
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`
   );
