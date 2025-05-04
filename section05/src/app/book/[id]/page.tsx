@@ -1,4 +1,15 @@
+import { notFound } from "next/navigation";
 import style from "./page.module.css";
+
+// 지정된 url 파라미터 외에 다른 url은 false로 처리한다.
+export const dynamicParams = true;
+
+// 3가지의 정적인 URL 파라미터를 담은 함수를 내보낸다.
+// 주의할점 1. URL 파라미터의 값을 명시할 때는 문자열 데이터로만 명시해야한다.
+// 2. Params라는 함수를 내보내게 되면, 무조건 해당하는 페이지가 static페이지로 강제로 설정된다.
+export function generateStaticParams() {
+  return [{ id: "1" }, { id: "2" }, { id: "3" }];
+}
 
 export default async function Page({
   params,
@@ -12,6 +23,9 @@ export default async function Page({
   );
 
   if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
     return <div>오류가 발생했습니다!</div>;
   }
 
