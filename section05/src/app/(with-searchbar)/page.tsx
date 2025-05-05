@@ -2,6 +2,13 @@ import BookItem from "@/components/book-item";
 import style from "./page.module.css";
 import { BookData } from "@/types";
 
+// export const dynamic = "force-dynamic";
+// 특정 페이지의 유형을 강제로 Static, Dynamic 페이지로 설정한다.
+// 1. auto : 기본값으로 아무것도 강제하지 않는 옵션이다.(생략해도 상관이 없다)
+// 2. force-dynamic : 페이지를 강제로 Dynamic 페이지로 설정하는 옵션이다.
+// 3. force-static : 페이지를 강제로 Static 페이지로 설정하는 옵션이다.
+// 4. error : 페이지를 강제로 Static 페이지로 설정한다 (동적함수나 캐싱되지 않는 함수가 있다면 빌드 오류를 발생시킨다)
+
 // 모든 도서를 가져오는 컴포넌트
 async function AllBooks() {
   // API 서버에서 모든 도서 데이터를 가져옴

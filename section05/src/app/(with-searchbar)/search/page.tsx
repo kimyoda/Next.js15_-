@@ -1,6 +1,9 @@
 import BookItem from "@/components/book-item";
 import { BookData } from "@/types";
 
+// 동적인 기능이 작동이 되지않아, 부작용이 생길 수 있다.
+// export const dynamic = "error";
+
 // 검색 페이지 컴포넌트
 export default async function Page({
   searchParams, // URL의 쿼리 파라미터를 받는 객체
