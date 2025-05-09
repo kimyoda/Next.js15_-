@@ -1,5 +1,6 @@
 import BookItem from "@/components/book-item";
 import { BookData } from "@/types";
+import { delay } from "@/util/delay";
 
 // 동적인 기능이 작동이 되지않아, 부작용이 생길 수 있다.
 // export const dynamic = "error";
@@ -16,6 +17,9 @@ export default async function Page({
   // API 서버에 검색 요청을 보내고 결과를 가져옴
   // 기본 캐싱: 옵션 미지정 시 정적 생성 캐시 사용
   // 한번 검색이 된 데이터는 조금 더 빠르게 데이터 검색이 가능
+  // 스트리밍 세팅
+
+  await delay(1500);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`,
     { cache: "force-cache" }
