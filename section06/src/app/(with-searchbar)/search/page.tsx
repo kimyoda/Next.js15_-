@@ -1,18 +1,10 @@
 import BookItem from "@/components/book-item";
 import { BookData } from "@/types";
 import { delay } from "@/util/delay";
+import { Suspense } from "react";
 
-// 동적인 기능이 작동이 되지않아, 부작용이 생길 수 있다.
-// export const dynamic = "error";
-
-// 검색 페이지 컴포넌트
-export default async function Page({
-  searchParams, // URL의 쿼리 파라미터를 받는 객체
-}: {
-  searchParams: Promise<{ q?: string }>; // q는 검색어를 나타내는 선택적 파라미터
-}) {
+async function SearchResult({ q }: { q: string }) {
   // 검색어를 추출
-  const { q } = await searchParams;
 
   // API 서버에 검색 요청을 보내고 결과를 가져옴
   // 기본 캐싱: 옵션 미지정 시 정적 생성 캐시 사용
@@ -38,5 +30,23 @@ export default async function Page({
         <BookItem key={book.id} {...book} />
       ))}
     </div>
+  );
+}
+// 동적인 기능이 작동이 되지않아, 부작용이 생길 수 있다.
+// export const dynamic = "error";
+
+// 검색 페이지 컴포넌트
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}) {
+  return (
+    // fallback 대체 ui로 Loading 적용
+    // key값이 바뀌면 새롭게 그리는 활용하여 로딩상태를 표시하게 할 수 있다.
+    <Suspense key={searchParams.q || ""} fallback={<div>Loading...</div>}>
+      {/* Suspense를 통해 스트리밍 적용 */}
+      <SearchResult q={searchParams.q || ""} />
+    </Suspense>
   );
 }
