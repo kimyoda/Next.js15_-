@@ -1,6 +1,8 @@
 import BookItem from "@/components/book-item";
 import style from "./page.module.css";
 import { BookData } from "@/types";
+import { delay } from "@/util/delay";
+import { Suspense } from "react";
 
 // export const dynamic = "force-dynamic";
 // 특정 페이지의 유형을 강제로 Static, Dynamic 페이지로 설정한다.
@@ -11,6 +13,7 @@ import { BookData } from "@/types";
 
 // 모든 도서를 가져오는 컴포넌트
 async function AllBooks() {
+  await delay(1500);
   // API 서버에서 모든 도서 데이터를 가져옴
   // 캐싱 비활성화: { cache: "no-store" } 옵션으로 매 요청 시 최신 데이터를 가져옵니다.
   const response = await fetch(
@@ -33,6 +36,7 @@ async function AllBooks() {
 
 // 추천 도서를 가져오는 컴포넌트
 async function RecoBooks() {
+  await delay(3000);
   // API 서버에서 랜덤 추천 도서 데이터를 가져옴
   // ISR 설정: next.revalidate를 3초로 지정해, 최초 빌드 후 3초마다 재검증합니다.
   const response = await fetch(
@@ -54,6 +58,9 @@ async function RecoBooks() {
   );
 }
 
+// 다이나믹 페이지 적용
+export const dynamic = "force-dynamic";
+
 // 메인 홈페이지 컴포넌트
 export default function Home() {
   return (
@@ -61,12 +68,16 @@ export default function Home() {
       {/* 추천 도서 섹션 */}
       <section>
         <h3>지금 추천하는 도서</h3>
-        <RecoBooks />
+        <Suspense fallback={<div>도서를 불러오는 중입니다...</div>}>
+          <RecoBooks />
+        </Suspense>
       </section>
       {/* 전체 도서 목록 섹션 */}
       <section>
         <h3>등록된 모든 도서</h3>
-        <AllBooks />
+        <Suspense fallback={<div>도서를 불러오는 중입니다...</div>}>
+          <AllBooks />
+        </Suspense>
       </section>
     </div>
   );
