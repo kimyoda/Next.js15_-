@@ -1,4 +1,5 @@
 import BookItem from "@/components/book-item";
+import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 import { BookData } from "@/types";
 import { delay } from "@/util/delay";
 import { Suspense } from "react";
@@ -44,7 +45,10 @@ export default function Page({
   return (
     // fallback 대체 ui로 Loading 적용
     // key값이 바뀌면 새롭게 그리는 활용하여 로딩상태를 표시하게 할 수 있다.
-    <Suspense key={searchParams.q || ""} fallback={<div>Loading...</div>}>
+    <Suspense
+      key={searchParams.q || ""}
+      fallback={<BookListSkeleton count={3} />}
+    >
       {/* Suspense를 통해 스트리밍 적용 */}
       <SearchResult q={searchParams.q || ""} />
     </Suspense>
