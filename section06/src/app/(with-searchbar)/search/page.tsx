@@ -1,18 +1,20 @@
+// 검색 결과를 표시하는 페이지 컴포넌트
+// Next.js 13의 새로운 App Router 구조를 사용하며, 동적 라우팅을 지원합니다.
+
 import BookItem from "@/components/book-item";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 import { BookData } from "@/types";
 import { delay } from "@/util/delay";
 import { Suspense } from "react";
 
+// 검색 결과를 표시하는 비동기 컴포넌트
 async function SearchResult({ q }: { q: string }) {
-  // 검색어를 추출
+  // 개발 환경에서 로딩 상태를 확인하기 위한 인위적 지연
+  await delay(1500);
 
   // API 서버에 검색 요청을 보내고 결과를 가져옴
   // 기본 캐싱: 옵션 미지정 시 정적 생성 캐시 사용
   // 한번 검색이 된 데이터는 조금 더 빠르게 데이터 검색이 가능
-  // 스트리밍 세팅
-
-  await delay(1500);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`,
     { cache: "force-cache" }
@@ -33,6 +35,7 @@ async function SearchResult({ q }: { q: string }) {
     </div>
   );
 }
+
 // 동적인 기능이 작동이 되지않아, 부작용이 생길 수 있다.
 // export const dynamic = "error";
 
@@ -43,7 +46,7 @@ export default function Page({
   searchParams: { q?: string };
 }) {
   return (
-    // fallback 대체 ui로 Loading 적용
+    // Suspense를 사용하여 비동기 데이터 로딩 중에 스켈레톤 UI를 표시
     // key값이 바뀌면 새롭게 그리는 활용하여 로딩상태를 표시하게 할 수 있다.
     <Suspense
       key={searchParams.q || ""}
