@@ -11,6 +11,8 @@ export function generateStaticParams() {
   return [{ id: "1" }, { id: "2" }, { id: "3" }];
 }
 
+// 책 상세 정보를 가져오는 컴포넌트
+// API 서버에서 책 정보를 가져와서 화면에 표시
 async function BookDetail({ bookId }: { bookId: string }) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`
@@ -28,7 +30,7 @@ async function BookDetail({ bookId }: { bookId: string }) {
   const { title, subTitle, description, author, publisher, coverImgUrl } = book;
 
   return (
-    <div className={style.container}>
+    <section>
       <div
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${coverImgUrl}')` }}
@@ -41,14 +43,39 @@ async function BookDetail({ bookId }: { bookId: string }) {
         {author} | {publisher}
       </div>
       <div className={style.description}>{description}</div>
-    </div>
+    </section>
   );
 }
 
+// 리뷰 작성 폼 컴포넌트
+// 서버 액션을 사용하여 리뷰 데이터를 처리
 function ReviewEditor() {
-  return <div>editor</div>;
+  // 서버 액션 함수 정의
+  // 'use server' 지시문을 사용하여 이 함수가 서버에서 실행됨을 명시
+  // formData를 통해 클라이언트에서 전송된 데이터를 받아서 처리
+  async function createReviewAction(formData: FormData) {
+    "use server";
+
+    const content = formData.get("content")?.toString();
+    const author = formData.get("author")?.toString();
+
+    console.log(content, author);
+  }
+
+  return (
+    <section>
+      {/* form의 action 속성에 서버 액션 함수를 연결 */}
+      <form action={createReviewAction}>
+        <input name="content" placeholder="리뷰 내용" />
+        <input name="author" placeholder="작성자" />
+        <button type="submit">작성하기</button>
+      </form>
+    </section>
+  );
 }
 
+// 메인 페이지 컴포넌트
+// URL 파라미터로부터 책 ID를 받아서 BookDetail과 ReviewEditor 컴포넌트를 렌더링
 export default async function Page({
   params,
 }: {
@@ -57,7 +84,7 @@ export default async function Page({
   const { id } = await params;
 
   return (
-    <div>
+    <div className={style.container}>
       <BookDetail bookId={id} />
       <ReviewEditor />
     </div>
