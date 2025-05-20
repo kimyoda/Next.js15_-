@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
+import { createReviewAction } from "@/actions/create-review.action";
 
 // 지정된 url 파라미터 외에 다른 url은 false로 처리한다.
-export const dynamicParams = true;
+// export const dynamicParams = true;
 
 // 3가지의 정적인 URL 파라미터를 담은 함수를 내보낸다.
 // 주의할점 1. URL 파라미터의 값을 명시할 때는 문자열 데이터로만 명시해야한다.
@@ -49,25 +50,15 @@ async function BookDetail({ bookId }: { bookId: string }) {
 
 // 리뷰 작성 폼 컴포넌트
 // 서버 액션을 사용하여 리뷰 데이터를 처리
-function ReviewEditor() {
-  // 서버 액션 함수 정의
-  // 'use server' 지시문을 사용하여 이 함수가 서버에서 실행됨을 명시
-  // formData를 통해 클라이언트에서 전송된 데이터를 받아서 처리
-  async function createReviewAction(formData: FormData) {
-    "use server";
-
-    const content = formData.get("content")?.toString();
-    const author = formData.get("author")?.toString();
-
-    console.log(content, author);
-  }
-
+function ReviewEditor({ bookId }: { bookId: string }) {
   return (
     <section>
       {/* form의 action 속성에 서버 액션 함수를 연결 */}
       <form action={createReviewAction}>
-        <input name="content" placeholder="리뷰 내용" />
-        <input name="author" placeholder="작성자" />
+        {/* hidden 애트리뷰트가 있다면 모두 readOnly를 추가해야한다 */}
+        <input name="bookId" value={bookId} hidden readOnly />
+        <input required name="content" placeholder="리뷰 내용" />
+        <input required name="author" placeholder="작성자" />
         <button type="submit">작성하기</button>
       </form>
     </section>
@@ -86,7 +77,7 @@ export default async function Page({
   return (
     <div className={style.container}>
       <BookDetail bookId={id} />
-      <ReviewEditor />
+      <ReviewEditor bookId={id} />
     </div>
   );
 }
