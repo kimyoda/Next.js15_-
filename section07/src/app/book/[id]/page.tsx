@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
-import { createReviewAction } from "@/actions/create-review.action";
+import { ReviewData } from "@/types";
+import ReviewItem from "@/components/review-tiem";
+import ReviewEditor from "@/components/review-editor";
 
 // 지정된 url 파라미터 외에 다른 url은 false로 처리한다.
 // export const dynamicParams = true;
@@ -48,19 +50,35 @@ async function BookDetail({ bookId }: { bookId: string }) {
   );
 }
 
-// 리뷰 작성 폼 컴포넌트
-// 서버 액션을 사용하여 리뷰 데이터를 처리
-function ReviewEditor({ bookId }: { bookId: string }) {
+/**
+ * ReviewList 컴포넌트
+ *
+ * 이 컴포넌트는 특정 도서에 대한 모든 리뷰를 가져와서 표시합니다.
+ * 서버 컴포넌트로 구현되어 있어 서버 사이드에서 데이터를 가져옵니다.
+ *
+ * Props:
+ * @param {string} bookId - 리뷰를 조회할 도서의 고유 식별자
+ */
+async function ReviewList({ bookId }: { bookId: string }) {
+  // API 서버에서 해당 도서의 리뷰 목록을 가져옵니다
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`
+  );
+
+  // API 응답이 실패한 경우 에러를 발생시킵니다
+  if (!response.ok) {
+    throw new Error(`Review fetch failed: ${response.statusText}`);
+  }
+
+  // 응답 데이터를 ReviewData 타입의 배열로 변환합니다
+  const reviews: ReviewData[] = await response.json();
+
   return (
     <section>
-      {/* form의 action 속성에 서버 액션 함수를 연결 */}
-      <form action={createReviewAction}>
-        {/* hidden 애트리뷰트가 있다면 모두 readOnly를 추가해야한다 */}
-        <input name="bookId" value={bookId} hidden readOnly />
-        <input required name="content" placeholder="리뷰 내용" />
-        <input required name="author" placeholder="작성자" />
-        <button type="submit">작성하기</button>
-      </form>
+      {/* 각 리뷰 데이터를 ReviewItem 컴포넌트로 렌더링합니다 */}
+      {reviews.map((review) => (
+        <ReviewItem key={`review-item-${review.id}`} {...review} />
+      ))}
     </section>
   );
 }
@@ -78,6 +96,7 @@ export default async function Page({
     <div className={style.container}>
       <BookDetail bookId={id} />
       <ReviewEditor bookId={id} />
+      <ReviewList bookId={id} />
     </div>
   );
 }
