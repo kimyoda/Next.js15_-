@@ -40,20 +40,19 @@ async function SearchResult({ q }: { q: string }) {
 // export const dynamic = "error";
 
 // 검색 페이지 컴포넌트
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
+  const { q } = await searchParams;
+
   return (
     // Suspense를 사용하여 비동기 데이터 로딩 중에 스켈레톤 UI를 표시
     // key값이 바뀌면 새롭게 그리는 활용하여 로딩상태를 표시하게 할 수 있다.
-    <Suspense
-      key={searchParams.q || ""}
-      fallback={<BookListSkeleton count={3} />}
-    >
+    <Suspense key={q || ""} fallback={<BookListSkeleton count={3} />}>
       {/* Suspense를 통해 스트리밍 적용 */}
-      <SearchResult q={searchParams.q || ""} />
+      <SearchResult q={q || ""} />
     </Suspense>
   );
 }
