@@ -62,7 +62,8 @@ async function BookDetail({ bookId }: { bookId: string }) {
 async function ReviewList({ bookId }: { bookId: string }) {
   // API 서버에서 해당 도서의 리뷰 목록을 가져옵니다
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`,
+    { next: { tags: [`reviews-${bookId}`] } }
   );
 
   // API 응답이 실패한 경우 에러를 발생시킵니다
