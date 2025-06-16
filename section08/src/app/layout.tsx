@@ -51,6 +51,12 @@ export default function RootLayout({
           {/* 푸터 영역 */}
           <Footer />
         </div>
+        {/* 
+          모달 포털을 위한 루트 엘리먼트
+          createPortal을 사용하여 모달이 이 위치에 렌더링됨
+          이는 모달이 다른 DOM 위치에 렌더링되어 z-index나 스타일링 문제를 방지
+        */}
+        <div id="modal-root"></div>
       </body>
     </html>
   );
