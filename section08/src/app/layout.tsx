@@ -2,6 +2,7 @@ import "./globals.css";
 import Link from "next/link";
 import style from "./layout.module.css";
 import { BookData } from "@/types";
+import { ReactNode } from "react";
 
 async function Footer() {
   // 기본 캐싱: 레이아웃에서도 정적 생성 캐시를 사용합니다.
@@ -29,13 +30,27 @@ async function Footer() {
   );
 }
 
-// 루트 레이아웃 컴포넌트
-// 모든 페이지에 공통적으로 적용되는 레이아웃을 정의합니다.
-// RootLayout을 가장 먼저 확인해야한다.(동적함수, 캐싱되지 않는 데이터 페칭)
+/**
+ * 루트 레이아웃 컴포넌트
+ *
+ * 패럴랠 라우트 구조:
+ * - children: 메인 페이지 콘텐츠
+ * - modal: 패럴랠 라우트 슬롯 (@modal 폴더의 콘텐츠)
+ *
+ * 패럴랠 라우트의 장점:
+ * 1. 동시에 여러 페이지를 렌더링 가능
+ * 2. 모달과 메인 페이지가 독립적으로 관리됨
+ * 3. URL 상태와 모달 상태를 분리하여 관리
+ *
+ * @param children - 메인 페이지 콘텐츠
+ * @param modal - 패럴랠 라우트로 렌더링될 모달 콘텐츠
+ */
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -51,6 +66,12 @@ export default function RootLayout({
           {/* 푸터 영역 */}
           <Footer />
         </div>
+        {/* 
+          패럴랠 라우트로 렌더링되는 모달 슬롯
+          @modal 폴더의 콘텐츠가 여기에 렌더링됨
+          인터셉팅 라우트와 결합하여 모달 형태로 표시
+        */}
+        {modal}
         {/* 
           모달 포털을 위한 루트 엘리먼트
           createPortal을 사용하여 모달이 이 위치에 렌더링됨
