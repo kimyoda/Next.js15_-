@@ -40,10 +40,17 @@ async function BookDetail({ bookId }: { bookId: string }) {
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${coverImgUrl}')` }}
       >
+        {/*
+          next/image의 Image 컴포넌트를 사용하면 자동으로 이미지 최적화가 적용됩니다.
+          - 브라우저에 맞는 크기와 포맷(WebP 등)으로 이미지를 변환하여 전송합니다.
+          - Lazy loading, responsive image, placeholder 등 다양한 최적화 기능을 제공합니다.
+          - 성능 개선 및 SEO에 유리합니다.
+          아래 코드는 도서 표지 이미지를 최적화하여 렌더링합니다.
+        */}
         <Image
           src={coverImgUrl}
-          width={80}
-          height={105}
+          width={240}
+          height={300}
           alt={`도서 ${title}의 표지 이미지`}
         />
       </div>
